@@ -1,0 +1,219 @@
+# 3.4 Consumer配置
+
+以下是消费者的配置：
+
+> `key.deserializer`：实现`org.apache.kafka.common.serialization.Deserializer`接口的密钥的反序列化器类。
+类型：`class` - 默认值： - 有效值： - 重要性：高
+
+> `value.deserializer`：用于实现`org.apache.kafka.common.serialization.Deserializer`接口的`value`的`Deserializer`类。
+类型：`class` - 默认值： - 有效值： - 重要性：高
+
+> `bootstrap.servers`：用于建立与`Kafka`集群的初始连接的主机/端口对列表。客户端将使用所有服务器，而与此处指定用于引导的服务器无关—该列表仅影响用于发现整套服务器的初始主机。此列表应采用形式`host1:port1,host2:port2,...`。由于这些服务器仅用于初始连接以发现完整的集群成员身份（可能会动态更改），因此此列表不必包含完整的服务器集合（但是，如果服务器关闭，则可能需要多个服务器）。 。
+类型：`list` - 默认值："" - 有效值：非空字符串 - 重要性：高
+
+> `fetch.min.bytes`：服务器应为获取请求返回的最小数据量。如果没有足够的数据，则请求将等待该数据积累，然后再回答请求。默认设置为1字节，这意味着只要有一个字节的数据可用，或者提取请求超时等待数据到达，就将对提取请求进行应答。将此值设置为大于1的值将导致服务器等待大量数据累积，这可以以一些额外的延迟为代价提高服务器吞吐量。
+类型：`int` - 默认值：1 - 有效值：[0，...] - 重要性：高
+
+> `group.id`：唯一字符串，标识此使用者所属的使用者组。如果使用者使用通过使用组管理功能`subscribe(topic)`或基于`Kafka`的偏移量管理策略，则需要此属性。
+类型：`string` - 默认值：`null` - 有效值： - 重要性：高
+
+> `heartbeat.interval.ms`：使用`Kafka`的群组管理工具时，预期到消费者协调员的两次心跳之间的时间。心跳用于确保消费者的会话保持活动状态，并在新消费者加入或离开该组时促进重新平衡。该值必须设置为小于`session.timeout.ms`，但通常应设置为不大于该值的1/3。可以将其调整得更低，以控制正常重新平衡的预期时间。
+类型：`int` - 默认值：3000 - 有效值： - 重要性：高
+
+> `max.partition.fetch.bytes`：服务器将为每个分区返回的最大数据量。记录由消费者分批提取。如果提取的第一个非空分区中的第一个记录批处理大于此限制，则仍将返回该批处理以确保使用者可以取得进展。代理接受的最大记录批处理大小是通过`message.max.bytes`（代理配置）或`max.message.bytes`（主题配置）定义的。有关限制使用者请求大小的信息，请参见`fetch.max.bytes`。
+类型：`int` - 默认值：1048576 - 有效值：[0，...] - 重要性：高
+
+> `session.timeout.ms`：使用`Kafka`的组管理工具时，超时用于检测客户端故障。客户端会定期发送心跳，以向经纪人表明其活跃程度。如果代理在此会话超时之前未收到任何心跳信号，则代理将从该组中删除此客户端并启动重新平衡。注意，值必须是在容许范围内被配置在代理配置由`group.min.session.timeout.ms`和`group.max.session.timeout.ms`。
+类型：`int` - 默认值：10000 - 有效值： - 重要性：高
+
+> `ssl.key.password`：密钥存储文件中私钥的密码。这对于客户端是可选的。
+类型：`password` - 默认值：`null` - 有效值： - 重要性：高
+
+> `ssl.keystore.location`：密钥存储文件的位置。这对于客户端是可选的，并且可以用于客户端的双向身份验证。
+类型：`string` - 默认值：`null` - 有效值： - 重要性：高
+
+> `ssl.keystore.password`：密钥存储文件的存储密码。这对于客户端是可选的，并且仅在配置了`ssl.keystore.location`时才需要。
+类型：`password` - 默认值：`null` - 有效值： - 重要性：高
+
+> `ssl.truststore.location`：信任库文件的位置。
+类型：`string` - 默认值：`null` - 有效值： - 重要性：高
+
+> `ssl.truststore.password`：信任存储文件的密码。如果未设置密码，对信任库的访问仍然可用，但是完整性检查被禁用。
+类型：`password` - 默认值：`null` - 有效值： - 重要性：高
+
+> `allow.auto.create.topics`：订阅或分配主题时，允许在代理上自动创建主题。仅当代理使用`auto.create.topics.enable`代理配置允许它时，才会自动创建要订阅的主题。使用低于`0.11.0`的代理时，必须将此配置设置为`false`。
+类型：`bool` - 默认值：`true` - 有效值： - 重要性：中等
+
+> `auto.offset.reset`：当`Kafka`中没有初始偏移量或服务器上不再存在当前偏移量时（例如因为该数据已被删除），该怎么办：
+- `earliest`：将偏移量自动重置为最早的偏移量
+- `latest`：自动将偏移量重置为最新偏移量
+- `none`：如果未找到消费者组的先前偏移量，则向消费者抛出异常
+- 其他：向消费者抛出异常。
+
+类型：`string` - 默认值：最新 - 有效值：[`earliest`，`latest`,`none`] - 重要性：中等
+
+> `client.dns.lookup`：控制客户端如何使用`DNS`查找。如果设置为`use_all_dns_ips`那么，当查找返回一个主机名的多个IP地址时，将在连接失败之前尝试全部连接。同时适用于引导服务器和公告服务器。如果值为，`resolve_canonical_bootstrap_servers_only`则将解析每个条目并将其扩展为规范名称列表。
+类型：`string` - 默认值：`default` - 有效值：[`default`，`use_all_dns_ips`，`resolve_canonical_bootstrap_servers_only`] - 重要性：中等
+
+> `connections.max.idle.ms` - ：在此配置指定的毫秒数后关闭空闲连接。
+类型：`long` - 默认值：540000 - 有效值： - 重要性：中等
+
+> `default.api.timeout.ms`：指定可能阻塞的使用者API的超时（以毫秒为单位）。此配置用作所有未明确接受`timeout`参数的使用者操作的默认超时。
+类型：`int` - 默认值：60000 - 有效值：[0，...] - 重要性：中等
+
+> `enable.auto.commit`：如果为`true`，则将在后台定期提交使用者的偏移量。
+类型：`bool` - 默认值：`true` - 有效值： - 重要性：中等
+
+> `exclude.internal.topics`：是否应将与订阅模式匹配的内部主题排除在订阅之外。始终可以明确订阅内部主题。
+类型：`bool` - 默认值：`true` - 有效值： - 重要性：中等
+
+> `fetch.max.bytes`：服务器应为获取请求返回的最大数据量。使用者将批量获取记录，并且如果获取的第一个非空分区中的第一个记录批次大于此值，则仍将返回记录批次以确保使用者可以取得进展。因此，这不是绝对最大值。代理接受的最大记录批处理大小是通过`message.max.bytes`（代理配置）或`max.message.bytes`（主题配置）定义的。请注意，使用者并行执行多个提取。
+类型：`int` - 默认值：52428800 - 有效值：[0，...] - 重要性：中等
+
+> `group.instance.id`：最终用户提供的使用者实例的唯一标识符。仅允许使用非空字符串。如果设置，则将使用者视为静态成员，这意味着在任何时候，使用者组中仅允许使用一个具有此`ID`的实例。可以将其与较大的会话超时结合使用，以避免由于瞬时不可用（例如，进程重新启动）而导致的组重新平衡。如果未设置，则消费者将作为动态成员加入组，这是传统行为。
+类型：`string` - 默认值：`null` - 有效值： - 重要性：中等
+
+> `isolated.level`：控制如何读取以事务方式编写的消息。如果设置为`read_committed，consumer.poll()`将仅返回已提交的事务性消息。如果设置为`read_uncommitted`（默认值），`consumer.poll()`将返回所有消息，甚至是已中止的事务性消息。非事务性消息将以两种方式无条件返回。
+消息将始终以偏移顺序返回。因此，在 `read_committed`模式下，`consumer.poll()`将仅返回直到最后一个稳定偏移量（LSO）的消息，该偏移量小于第一个未完成交易的偏移量。特别是，属于正在进行的事务的消息之后出现的任何消息将被保留，直到相关事务完成为止。结果，`read_committed`当进行飞行交易时，消费者将无法读取高水位标记。
+
+进一步，当在`read_committedseekToEnd`方法中时将返回`LSO`
+
+类型：`string` - 默认值：`read_uncommitted` - 有效值：[`read_committed`，`read_uncommitted`] - 重要性：中等
+
+> `max.poll.interval.ms`：使用使用者组管理时，两次`poll()`调用之间的最大延迟。这为使用者在获取更多记录之前可以处于空闲状态的时间设置了上限。如果在此超时到期前未调用`poll()`，则认为使用方失败，该组将重新平衡以将分区重新分配给另一个成员。对于使用`group.instance.id`达到该超时值的非null的使用者，将不会立即重新分配分区。取而代之的是，使用者将停止发送心跳，并且在到期后将重新分配分区`session.timeout.ms`。这反映了已关闭的静态使用者的行为。
+类型：`int` - 默认值：300000 - 有效值：[1，...] - 重要性：中等
+
+> `max.poll.records`：一次调用`poll()`时返回的最大记录数。
+类型：`int` - 默认值：500 - 有效值：[1，...] - 重要性：中等
+
+> `partition.assignment.strategy`：负责使用分区管理策略的分区分配策略的类名称或类类型的列表，这些类名称或类类型按优先级排序，在使用组管理时，客户端将使用该分配策略在客户实例之间分配分区所有权。实施`org.apache.kafka.clients.consumer.ConsumerPartitionAssignor`接口后，您可以插入自定义分配策略。
+类型：`list` - 默认值：`org.apache.kafka.clients.consumer.RangeAssignor` - 有效值：非空字符串 - 重要性：中等
+
+> `receive.buffer.bytes`：读取数据时要使用的TCP接收缓冲区（SO_RCVBUF）的大小。如果值为-1，则将使用操作系统默认值。
+类型：`int` - 默认值：65536 - 有效值：[-1，...] - 重要性：中等
+
+> `request.timeout.ms`：该配置控制客户端等待请求响应的最长时间。如果超时之前仍未收到响应，则客户端将在必要时重新发送请求，如果重试已用尽，则客户端将使请求失败。
+类型：`int` - 默认值：30000 - 有效值：[0，...] - 重要性：中等
+
+> `sasl.client.callback.handler.clas`：实现`AuthenticateCallbackHandler`接口的SASL客户端回调处理程序类的完全限定名称。
+类型：`class` - 默认值：`null` - 有效值： - 重要性： - 中等
+
+> `sasl.jaas.config`：SASL连接的JAAS登录上下文参数，采用JAAS配置文件使用的格式。这里描述了 JAAS配置文件格式。值的格式为：`loginModuleClass controlFlag (optionName=optionValue)*;`。对于代理，配置必须以侦听器前缀和小写的SASL机制名称作为前缀。例如，需要`listener.name.sasl_ssl.scram-sha-256.sasl.jaas.config = com.example.ScramLoginModule`；
+类型：`password` - 默认值：`null` - 有效值： - 重要性：中等
+
+> `sasl.kerberos.service.name`：Kafka运行时使用的Kerberos主体名称。这可以在Kafka的JAAS配置或Kafka的配置中定义。
+类型：`string` - 默认值：`null` - 有效值： - 重要性：中等
+
+> `sasl.login.callback.handler.class`：实现`AuthenticateCallbackHandler`接口的SASL登录回调处理程序类的全限定名。对于代理，登录回调处理程序配置必须以侦听器前缀和小写的SASL机制名称作为前缀。例如，`listener.name.sasl_ssl.scram-sha-256.sasl.login.callback.handler.class = com.example.CustomScramLoginCallbackHandler`
+类型：`class` - 默认值：`null` - 有效值： - 重要性：中等
+
+> `sasl.login.class`：实现`Login`接口的类的完全限定名称。对于代理，登录配置必须以侦听器前缀和小写的SASL机制名称作为前缀。例如，`listener.name.sasl_ssl.scram-sha-256.sasl.login.class = com.example.CustomScramLogin`
+类型：`class` - 默认值：`null` - 有效值： - 重要性：中等
+
+> `sasl.mechanism`：用于客户端连接的SASL机制。这可以是安全提供程序可用的任何机制。GSSAPI是默认机制。
+类型：`string` - 默认值：`GSSAPI` - 有效值： - 重要性：中等
+
+> `security.protocol`：用于与代理进行通信的协议。有效值为：`PLAINTEXT`，`SSL`，`SASL_PLAINTEXT`，`SASL_SSL`。
+类型：`string` - 默认值：`PLAINTEXT` - 有效值： - 重要性：中等
+
+> `send.buffer.bytes`：发送数据时要使用的TCP发送缓冲区（SO_SNDBUF）的大小。如果值为-1，则将使用操作系统默认值。
+类型：`int` - 默认值：131072 - 有效值：[-1，...] - 重要性：中等
+
+> `ssl.enabled.protocols`：为`SSL`连接启用的协议列表。
+类型：`list` - 默认值：`TLSv1.2`，`TLSv1.1`，`TLSv1` - 有效值： - 重要性：中等
+
+> `ssl.keystore.type`：密钥存储文件的文件格式。这对于客户端是可选的。
+类型：`string` - 默认值：`JKS` - 有效值： - 重要性：中等
+
+> `ssl.protocol`：用于生成`SSLContext`的SSL协议。默认设置为TLS，在大多数情况下都可以使用。最近的JVM中允许的值为`TLS`，`TLSv1.1`和`TLSv1.2`。较早的JVM中可能支持`SSL`，`SSLv2`和`SSLv3`，但由于已知的安全漏洞，因此不鼓励使用它们。
+类型：`string` - 默认值：`TLS` - 有效值： - 重要性：中等
+
+> `ssl.provider`：用于`SSL`连接的安全提供程序的名称。缺省值是JVM的缺省安全提供程序。
+类型：`string` - 默认值：`null` - 有效值： - 重要性：中等
+
+> `ssl.truststore.type`：信任库文件的文件格式。
+类型：`string` - 默认值：`JKS` - 有效值： - 重要性：中等
+
+> `auto.commit.interval.ms`：即消费者偏移被自动提交到卡夫卡，如果以毫秒为单位的频率`enable.auto.commit`设定为`true`。
+类型：`int` - 默认值：5000 - 有效值：[0，...] - 重要性：低
+
+> `check.crcs`：自动检查消耗的记录的`CRC32`。这样可确保不会发生在线或磁盘损坏消息的情况。此检查会增加一些开销，因此在寻求极端性能的情况下可能会禁用该检查。
+类型：`bool` - 默认值：`true` - 有效值： - 重要性：低
+
+> `client.id`：发出请求时传递给服务器的ID字符串。其目的是通过允许将逻辑应用程序名称包含在服务器端请求日志中，从而能够跟踪IP/端口以外的请求源。
+类型：`string` - 默认值："" - 有效值： - 重要性：低
+
+> `client.rack`：此客户端的机架标识符。它可以是任何字符串值，用于指示此客户端的物理位置。它与代理配置`broker.rack`相对应
+类型：`string` - 默认值："" - 有效值： - 重要性：低
+
+> `fetch.max.wait.ms`：如果没有足够的数据立即满足`fetch.min.bytes`给出的要求，则服务器在响应提取请求之前将阻塞的最长时间。
+类型：`int` - 默认值：500 - 有效值：[0，...] - 重要性：低
+
+> `interceptor.classes`：用作拦截器的类的列表。通过实现该`org.apache.kafka.clients.consumer.ConsumerInterceptor`接口，您可以拦截（并可能诱变）使用者收到的记录。默认情况下，没有拦截器。
+类型：`list` - 默认值："" - 有效值：非空字符串 - 重要性：低
+
+> `metadata.max.age.ms`：以毫秒为单位的时间段，在此之后我们强制刷新元数据，即使我们没有看到任何分区领导更改也可以主动发现任何新的代理或分区。
+类型：`long` - 默认值：300000 - 有效值：[0，...] - 重要性：低
+
+> `metric.reporters`：用作指标报告者的类列表。实施该`org.apache.kafka.common.metrics.MetricsReporter`接口允许插入将通知新度量标准创建的类。始终包含`JmxReporter`来注册JMX统计信息。
+类型：`list` - 默认值："" - 有效值：非空字符串 - 重要性：低
+
+> `metrics.num.samples`：为计算指标而维护的样本数。
+类型：`int` - 默认值：2 - 有效值：[1，...] - 重要性：低
+
+> `metrics.recording.level`：指标的最高记录级别。
+类型：`string` - 默认值：`INFO` - 有效值：[`INFO`，`DEBUG`] - 重要性：低
+
+> `metrics.sample.window.ms`：度量样本被计算的时间窗口。
+类型：`long` - 默认值：30000 - 有效值：[0，...] - 重要性：低
+
+> `reconnect.backoff.max.ms`：当重新连接到反复连接失败的代理时，要等待的最长时间（以毫秒为单位）。如果提供此选项，则对于每个连续的连接失败，每个主机的退避量将成倍增加，直至达到此最大值。在计算退避增量之后，添加20％的随机抖动以避免连接风暴。
+类型：`long` - 默认值：1000 - 有效值：[0，...] - 重要性：低
+
+> `reconnect.backoff.ms`：尝试重新连接到给定主机之前要等待的基本时间。这样可以避免以紧密的循环重复连接到主机。此补偿适用于客户端到代理的所有连接尝试。
+类型：`long` - 默认值：50 - 有效值：[0，...] - 重要性：低
+
+> `retry.backoff.ms`：尝试重试对给定主题分区的失败请求之前要等待的时间。在某些故障情况下，这避免了在紧密循环中重复发送请求。
+类型：`long` - 默认值：100 - 有效值：[0，...] - 重要性：低
+
+> `sasl.kerberos.kinit.cmd`：`Kerberos kinit`命令路径。
+类型：`string` - 默认值：`/usr/bin/kinit` - 有效值： - 重要性：低
+
+> `sasl.kerberos.min.time.before.relogin`：两次刷新尝试之间的登录线程睡眠时间。
+类型：`long` - 默认值：60000 - 有效值： - 重要性：低
+
+> `sasl.kerberos.ticket.renew.jitter`：添加到续订时间的随机抖动百分比。
+类型：`double` - 默认值：0.05 - 有效值： - 重要性：低
+
+> `sasl.kerberos.ticket.renew.window.factor`：登录线程将一直休眠，直到达到从上次刷新到票证到期的指定时间窗口因子为止，此时它将尝试续订票证。
+类型：`double` - 默认值：0.8 - 有效值： - 重要性：低
+
+> `sasl.login.refresh.buffer.seconds`：刷新凭证时要保留的凭证过期前的缓冲区时间，以秒为单位。如果刷新将以比缓冲区秒数更接近到期的方式发生，则刷新将被上移以保持尽可能多的缓冲区时间。合法值介于0到3600（1小时）之间；如果未指定任何值，则使用默认值300（5分钟）。如果此值和`sasl.login.refresh.min.period.seconds`的总和超过凭据的剩余生存期，则两者都将被忽略。当前仅适用于`OAUTHBEARER`。
+类型：`short` - 默认值：300 - 有效值：[0，...，3600] - 重要性：低
+
+> `sasl.login.refresh.min.period.seconds`：登录刷新线程在刷新凭证之前等待的最短时间（以秒为单位）。合法值在0到900之间（15分钟）；如果未指定任何值，则使用默认值60（1分钟）。如果此值和`sasl.login.refresh.buffer.seconds`的总和超过凭据的剩余生存期，则两者都将被忽略。当前仅适用于`OAUTHBEARER`。
+类型：`short` - 默认值：60 - 有效值：[0，...，900] - 重要性：低
+
+> `sasl.login.refresh.window.factor`：登录刷新线程将休眠，直到达到相对于凭据生存期的指定窗口因子为止，此时它将尝试刷新凭据。合法值介于0.5（50％）至1.0（100％）之间；如果未指定任何值，则使用默认值0.8（80％）。当前仅适用于`OAUTHBEARER`。
+类型：`double` - 默认值：0.8 - 有效值：[0.5，...，1.0] - 重要性：低
+
+> `sasl.login.refresh.window.jitter`：相对于凭证生存期的最大随机抖动量，添加到登录刷新线程的睡眠时间中。合法值介于0到0.25（25％）之间（含）；如果未指定任何值，则使用默认值0.05（5％）。当前仅适用于OAUTHBEARER。
+类型：`double` - 默认值：0.05 - 有效值：[0.0，...，0.25] - 重要性：低
+
+> `security.providers`：可配置创建者类的列表，每个创建者类返回一个实现安全算法的提供者。这些类应实现`org.apache.kafka.common.security.auth.SecurityProviderCreator`接口。
+类型：`string` - 默认值：`null` - 有效值： - 重要性：低
+
+> `ssl.cipher.suites`：密码套件列表。这是认证，加密，MAC和密钥交换算法的命名组合，用于协商使用TLS或SSL网络协议的网络连接的安全设置。默认情况下，支持所有可用的密码套件。
+类型：`list` - 默认值：`null` - 有效值： - 重要性：低
+
+> `ssl.endpoint.identification.algorithm`：使用服务器证书验证服务器主机名的端点标识算法。
+类型：`string` - 默认值：`https` - 有效值： - 重要性：低
+
+> `ssl.keymanager.algorithm`：密钥管理器工厂用于SSL连接的算法。缺省值是为Java虚拟机配置的密钥管理器工厂算法。
+类型：`string` - 默认值：`SunX509` - 有效值： - 重要性：低
+
+> `ssl.secure.random.implementation`：用于`SSL`加密操作的`SecureRandom PRNG`实现。
+类型：`string` - 默认值：`null` - 有效值： - 重要性：低
+
+> `ssl.trustmanager.algorithm`：信任管理器工厂用于SSL连接的算法。默认值是为Java虚拟机配置的信任管理器工厂算法。
+类型：`string` - 默认值：`PKIX` - 有效值： - 重要性：低
