@@ -14,3 +14,4 @@
 		* [Connect配置](documentation/configuration/connect_config.md)
 		* [Stream配置](documentation/configuration/stream_config.md)
 		* [AdminClient配置](documentation/configuration/admin_config.md)
+	* [设计](documentation/design.md)

@@ -8,3 +8,4 @@
 	* [Connect配置](configuration/connect_config.md)
 	* [Stream配置](configuration/stream_config.md)
 	* [AdminClient配置](configuration/admin_config.md)
+* [设计](design.md)
