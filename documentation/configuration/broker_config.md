@@ -7,26 +7,33 @@
 
 `topic`级别的配置和默认值将在下面详细讨论。
 
-> `zookeeper.connect`：以以下形式指定`ZooKeeper`连接`string`：`hostname:port`,`host`和`port`是`ZooKeeper`服务器的主机和端口。要允许在`ZooKeeper`计算机停机时通过其他`ZooKeeper`节点进行连接，您还可以在表单中指定多个主机`hostname1:port1,hostname2:port2,hostname3:port3`。服务器还可以在其`ZooKeeper`连接`string`中包含一个`ZooKeeper chroot`路径，该路径将其数据放在全局`ZooKeeper`命名空间中的某个路径下。例如，要给您一个`chroot`路径，`/chroot/path`请将连接`string`指定为`hostname1:port1,hostname2:port2,hostname3:port3/chroot/path`。
-类型：`string` - 默认值：- 有效值： - 重要性：高 - 更新模式：只读
+> **`zookeeper.connect`**：以以下形式指定`ZooKeeper`连接`string`：`hostname:port`,`host`和`port`是`ZooKeeper`服务器的主机和端口。要允许在`ZooKeeper`计算机停机时通过其他`ZooKeeper`节点进行连接，您还可以在表单中指定多个主机`hostname1:port1,hostname2:port2,hostname3:port3`。服务器还可以在其`ZooKeeper`连接`string`中包含一个`ZooKeeper chroot`路径，该路径将其数据放在全局`ZooKeeper`命名空间中的某个路径下。例如，要给您一个`chroot`路径，`/chroot/path`请将连接`string`指定为`hostname1:port1,hostname2:port2,hostname3:port3/chroot/path`。
+>
+> **类型**：`string` - **默认值**：- **有效值**： - **重要性**：高 - **更新模式**：只读
 
-> `advertised.host.name`：不推荐使用：仅在`advertised.listeners`或`listeners`未设置时使用。使用`advertised.listeners`代替。要发布给`ZooKeeper`的主机名，供客户端使用。在`IaaS`环境中，这可能需要与代理绑定的接口不同。如果未设置，它将使用`host.name`配置的值。否则，它将使用从`java.net.InetAddress.getCanonicalHostName()`返回的值。
-类型：`string` - 默认值：`null` - 有效值： - 重要性：高 - 更新模式：只读
+> __`advertised.host.name`__：不推荐使用：仅在`advertised.listeners`或`listeners`未设置时使用。使用`advertised.listeners`代替。要发布给`ZooKeeper`的主机名，供客户端使用。在`IaaS`环境中，这可能需要与代理绑定的接口不同。如果未设置，它将使用`host.name`配置的值。否则，它将使用从`java.net.InetAddress.getCanonicalHostName()`返回的值。
+>
+> **类型**：`string` - **默认值**：`null` - **有效值**： - **重要性**：高 - **更新模式**：只读
 
-> `advertised.listeners`：发布到`ZooKeeper`以便客户端使用的监听器（如果与`listenersconfi`g属性不同）。在`IaaS`环境中，这可能需要与代理绑定的接口不同。如果未设置，将使用`listeners`的值。`listeners`与之不同的是，广告`0.0.0.0`元地址无效。
-类型：`string` - 默认值：`null` - 有效值： - 重要性：高 - 更新模式：每个`broker`
+> **`advertised.listeners`**：发布到`ZooKeeper`以便客户端使用的监听器（如果与`listenersconfi`g属性不同）。在`IaaS`环境中，这可能需要与代理绑定的接口不同。如果未设置，将使用`listeners`的值。`listeners`与之不同的是，广告`0.0.0.0`元地址无效。
+>
+> **类型**：`string` - **默认值**：`null` - **有效值**： - **重要性**：高 - **更新模式**：每个`broker`
 
-> `advertised.port`：不推荐使用：仅在`advertised.listeners`或`listeners`未设置时使用。使用`advertised.listeners`代替。发布到`ZooKeeper`供客户端使用的端口。在`IaaS`环境中，这可能需要与代理绑定的端口不同。如果未设置，它将发布代理绑定到的相同端口。
-类型：`int` - 默认值：`null` - 有效值： - 重要性：高 - 更新模式：只读
+> **`advertised.port`**：不推荐使用：仅在`advertised.listeners`或`listeners`未设置时使用。使用`advertised.listeners`代替。发布到`ZooKeeper`供客户端使用的端口。在`IaaS`环境中，这可能需要与代理绑定的端口不同。如果未设置，它将发布代理绑定到的相同端口。
+>
+> **类型**：`int` - **默认值**：`null` - **有效值**： - **重要性**：高 - **更新模式**：只读
 
-> `auto.create.topics.enable`：启用服务器上主题的自动创建
-类型：`bool` - 默认值：`true` - 有效值： - 重要性：高 - 更新模式：只读
+> **`auto.create.topics.enable`**：启用服务器上`topic`的自动创建
+>
+> **类型**：`bool` - **默认值**：`true` - **有效值**： - **重要性**：高 - **更新模式**：只读
 
-> `auto.leader.rebalance.enable`：启用自动领导者平衡。后台线程定期检查分区领导者的分布，可通过`leader.imbalance.check.interval.seconds`进行配置。如果领导者不平衡超过`leader.imbalance.per.broker.percentage`，则会导致领导者重新平衡到分区的首选领导者。
-类型：`bool` - 默认值：`true` - 有效值： - 重要性：高 - 更新模式：只读
+> **`auto.leader.rebalance.enable`**：启用自动领导者平衡。后台线程定期检查分区领导者的分布，可通过`leader.imbalance.check.interval.seconds`进行配置。如果领导者不平衡超过`leader.imbalance.per.broker.percentage`，则会导致领导者重新平衡到分区的首选领导者。
+>
+> **类型**：`bool` - **默认值**：`true` - **有效值**： - **重要性**：高 - **更新模式**：只读
 
-> `background.threads`：用于各种后台处理任务的线程数
-类型：`int` - 默认值：`10` - 有效值：`[1，...]` - 重要性：高 - 更新模式：集群范围
+> **`background.threads`**：用于各种后台处理任务的线程数
+>
+> **类型**：`int` - **默认值**：`10` - **有效值**：`[1，...]` - **重要性**：高 - **更新模式**：集群范围
 
 > `broker.id`：此服务器的代理`ID`。如果未设置，将生成一个唯一的`broker``ID`。为避免`Zookeeper`生成的`broker``ID与`用户配置的`broker``ID`之间发生冲突，生成的`broker``ID`从`reserved.broker.max.id +1`开始。
 类型：`int` - 默认值：`-1` - 有效值： - 重要性：高 - 更新模式：只读

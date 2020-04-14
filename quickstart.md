@@ -23,7 +23,7 @@ bin/kafka-server-start.sh config/server.properties
 ...
 ```
 
-## 步骤3：建立主题
+## 步骤3：建立`topic`
 让我们用一个分区和一个副本创建一个名为"test"的`topic`：
 ```bash
 bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic test
@@ -158,7 +158,7 @@ my test message 2
 ## 步骤7：使用Kafka Connect导入/导出数据
 从控制台写入数据并将其写回到控制台是一个方便的起点，但是您可能要使用其他来源的数据或将数据从`Kafka`导出到其他系统。对于许多系统，可以使用`Kafka Connect`导入或导出数据，而无需编写自定义集成代码。
 
-`Kafka Connect`是`Kafka`附带的工具，用于将数据导入和导出到`Kafka`。它是运行连接器的可扩展工具，该 连接器实现用于与外部系统进行交互的自定义​​逻辑。在本快速入门中，我们将看到如何使用简单的连接器运行`Kafka Connect`，该连接器将数据从文件导入到`Kafka``topic`，并将数据从`Kafka``topic`导出到文件。
+`Kafka Connect`是`Kafka`附带的工具，用于将数据导入和导出到`Kafka`。它是运行连接器的可扩展工具，该 连接器实现用于与外部系统进行交互的自定义​​逻辑。在本快速入门中，我们将看到如何使用简单的连接器运行`Kafka Connect`，该连接器将数据从文件导入到`Kafka` `topic`，并将数据从`Kafka` `topic`导出到文件。
 
 首先，我们将从创建一些种子数据开始进行测试：
 ```bash
@@ -173,7 +173,7 @@ echo bar>> test.txt
 ```bash
 bin/connect-standalone.sh config/connect-standalone.properties config/connect-file-source.properties config/connect-file-sink.properties
 ```
-这些样本配置文件（随`Kafka`一起提供）使用您先前启动的默认本地集群配置并创建两个连接器：第一个是源连接器，该连接器从输入文件中读取行并将每个行生成到`Kafka``topic`，第二个是接收器连接器从`Kafka``topic`读取消息，并在输出文件中将它们作为一行显示。
+这些样本配置文件（随`Kafka`一起提供）使用您先前启动的默认本地集群配置并创建两个连接器：第一个是源连接器，该连接器从输入文件中读取行并将每个行生成到`Kafka` `topic`，第二个是接收器连接器从`Kafka` `topic`读取消息，并在输出文件中将它们作为一行显示。
 
 在启动过程中，您将看到许多日志消息，其中包括一些表明正在实例化连接器的消息。`Kafka Connect`进程启动后，源连接器应开始从`test.txt`主题中读取行并将其生成到主题`connect-test`，而接收器连接器应开始从`topic`中读取消息`connect-test` 并将其写入文件`test.sink.txt`。我们可以通过检查输出文件的内容来验证数据已通过整个管道传递：
 
@@ -182,7 +182,7 @@ more test.sink.txt
 foo
 bar
 ```
-请注意，数据存储在`Kafka``topic``connect-test`中，因此我们也可以运行控制台使用者以查看该`topic`中的数据（或使用自定义使用者代码进行处理）：
+请注意，数据存储在`Kafka` `topic` `connect-test`中，因此我们也可以运行控制台使用者以查看该`topic`中的数据（或使用自定义使用者代码进行处理）：
 ```bash
 bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic connect-test --from-beginning
 {"schema":{"type":"string","optional":false},"payload":"foo"}
